@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AoC
 {
-    public class Utils
+    public static class Utils
     {
         public static Int64 GCD(Int64 a, Int64 b)
         {
