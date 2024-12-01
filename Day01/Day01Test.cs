@@ -15,7 +15,7 @@ namespace AoC
 3   3";
 
         readonly Int64 resultA = 11;
-        readonly Int64 resultB = 0;
+        readonly Int64 resultB = 31;
 
         [Fact]
         public void Day01a()

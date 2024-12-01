@@ -24,7 +24,27 @@ namespace AoC
 
         public static Int64 Day01b(string[] input)
         {
-            return 0;
+            List<Int64> list1 = new List<Int64>();
+            List<Int64> list2 = new List<Int64>();
+            foreach (string s in input)
+            {
+                var nums = s.Split(' ');
+                list1.Add(Int64.Parse(nums[0]));
+                list2.Add(Int64.Parse(nums[3]));
+            }
+            var dict2 = new Dictionary<Int64, Int64>();
+            foreach (var n in list2)
+            {
+                if (!dict2.ContainsKey(n)) dict2.Add(n, 0);
+                dict2[n]++;
+            }
+            Int64 sum = 0;
+            foreach (var n in list1)
+            {
+                if (dict2.ContainsKey(n)) sum += n * dict2[n];
+            }
+
+            return sum;
         }
 
 
