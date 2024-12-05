@@ -1,0 +1,84 @@
+﻿using System.Diagnostics;
+
+namespace AoC
+{
+    public static class Day05
+    {
+
+        public static Int64 Day05a(string[] input)
+        {
+            var ordering = GetOrdering(input);
+
+            int row = Array.IndexOf(input, "");
+
+            int sum = 0;
+            for (int i = row + 1; i != input.Length; ++i)
+            {
+                var values = input[i].Split(',').Select(int.Parse).ToArray();
+
+                bool correctOrder = IsOrderCorrect(ordering, values);
+
+                if (correctOrder) sum += values[values.Length / 2];
+            }
+
+            return sum;
+        }
+
+        private static List<Tuple<int, int>> GetOrdering(string[] input)
+        {
+            var ordering = new List<Tuple<int, int>>();
+            foreach (string s in input)
+            {
+                if (s.Length == 0) break;
+                var values = s.Split('|');
+                ordering.Add(Tuple.Create(int.Parse(values[0]), int.Parse(values[1])));
+            }
+            return ordering;
+        }
+
+        private static bool IsOrderCorrect(List<Tuple<int, int>> ordering, int[] values)
+        {
+            bool allCorrectOrder = true;
+            for (int first = 0; first != values.Length - 1; ++first)
+            {
+                bool firstIsCorrect = true;
+                for (int second = first + 1; second != values.Length; ++second)
+                {
+                    bool thisPairCorrect = IsPairCorrectOrder(ordering, values[first], values[second]);
+                    if (thisPairCorrect) continue;
+                    firstIsCorrect = false; break;
+                }
+                if (!firstIsCorrect) { allCorrectOrder = false; break; }
+            }
+
+            return allCorrectOrder;
+        }
+
+        private static bool IsPairCorrectOrder(List<Tuple<int, int>> ordering, int firstVal, int secondVal)
+        {
+            foreach (var order in ordering)
+            {
+                if (order.Item1 == firstVal && order.Item2 == secondVal)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static Int64 Day05b(string[] input)
+        {
+            return 0;
+        }
+
+
+        static void Main(string[] args)
+        {
+            var lines = File.ReadAllLines("Day05.txt");
+            var sw = Stopwatch.StartNew();
+            Console.WriteLine("Day05a : {0}   Time: {1}", Day05a(lines), sw.ElapsedMilliseconds);
+            sw.Restart();
+            Console.WriteLine("Day05b : {0}   Time: {1}", Day05b(lines), sw.ElapsedMilliseconds);
+        }
+    }
+}
