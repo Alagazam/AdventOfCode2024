@@ -68,9 +68,65 @@ namespace AoC
 
         public static Int64 Day05b(string[] input)
         {
-            return 0;
+            var ordering = GetOrdering(input);
+
+            int row = Array.IndexOf(input, "");
+
+            int sum = 0;
+            for (int i = row + 1; i != input.Length; ++i)
+            {
+                var values = input[i].Split(',').Select(int.Parse).ToArray();
+
+                bool correctOrder = IsOrderCorrect(ordering, values);
+
+                if (!correctOrder)
+                {
+                    var order = GetCorrectOrder(ordering, values);
+                    sum += order[order.Length / 2];
+                }
+            }
+
+            return sum;
         }
 
+        private static int[] GetCorrectOrder(List<Tuple<int, int>> ordering, int[] values)
+        {
+            List<int> newList = new List<int>();
+            foreach (var value in values)
+            {
+                if (newList.Count == 0) newList.Add(value);
+                else
+                {
+                    int index = -1;
+                    bool before = false;
+                    foreach (var newListValue in newList)
+                    {
+                        foreach(var order in ordering )
+                        {
+                            // Found rule placing value befor current position in newList -> the right position is found
+                            if (order.Item1 == value && order.Item2 == newListValue)
+                            {
+                                index = newList.IndexOf(newListValue);
+                                before = true;
+                                break;
+                            }
+                            // Found rule placing value after current position in newList -> posible position is found, but needs to check rest of list
+                            if (order.Item1 == newListValue && order.Item2 == value)
+                            {
+                                index = newList.IndexOf(newListValue) + 1;
+                                break;
+                            }
+                        }
+                        if (before) break;
+                    }
+                    if (index != -1)
+                    {
+                        newList.Insert(index, value);
+                    }
+                }
+            }
+            return newList.ToArray();
+        }
 
         static void Main(string[] args)
         {
